@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CaWorkshop.WebUI.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     [ApiController]
     [Route("[controller]")]
