@@ -1,69 +1,36 @@
-using CaWorkshop.Domain.Entities;
-using CaWorkshop.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Http;
+using CaWorkshop.Application.TodoItems.Commands.CreateTodoItem;
+using CaWorkshop.Application.TodoItems.Commands.DeleteTodoItem;
+using CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CaWorkshop.WebUI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TodoItemsController : ControllerBase
-    {
-        private readonly ApplicationDbContext _context;
-
-        public TodoItemsController(ApplicationDbContext context)
+    public class TodoItemsController : ApiControllerBase
+    { 
+        // POST: api/TodoItems
+        [HttpPost]
+        public async Task<ActionResult<long>> PostTodoItem(
+            CreateTodoItemCommand command)
         {
-            _context = context;
+            return await Sender.Send(command);
         }
 
         // PUT: api/TodoItems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
+        public async Task<IActionResult> PutTodoItem(long id,
+            UpdateTodoItemCommand command)
         {
-            if (id != todoItem.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
-            _context.Entry(todoItem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await Sender.Send(command);
 
             return NoContent();
-        }
-
-        // POST: api/TodoItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<long>> PostTodoItem(TodoItem todoItem)
-        {
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
-            return todoItem.Id;
         }
 
         // DELETE: api/TodoItems/5
@@ -73,21 +40,9 @@ namespace CaWorkshop.WebUI.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
-
-            _context.TodoItems.Remove(todoItem);
-            await _context.SaveChangesAsync();
+            await Sender.Send(new DeleteTodoItemCommand { Id = id });
 
             return NoContent();
-        }
-
-        private bool TodoItemExists(long id)
-        {
-            return _context.TodoItems.Any(e => e.Id == id);
         }
     }
 }
