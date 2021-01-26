@@ -1,6 +1,7 @@
 ﻿using CaWorkshop.Application.Common.Interfaces;
 using CaWorkshop.Domain.Entities;
 using CaWorkshop.Infrastructure.Identity;
+using CaWorkshop.Infrastructure.Persistence.Configurations;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace CaWorkshop.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly()); 
 
             base.OnModelCreating(builder);
         }
