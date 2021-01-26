@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace CaWorkshop.WebUI.Controllers
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     [ApiController]
     [Route("[controller]")]
