@@ -4,9 +4,11 @@ using CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CaWorkshop.WebUI.Controllers
 {
+    [Authorize]
     public class TodoItemsController : ApiControllerBase
     { 
         // POST: api/TodoItems

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CaWorkshop.Application.Common.Behaviours;
+using CaWorkshop.Application.Common.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
