@@ -42,7 +42,7 @@ namespace CaWorkshop.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly()); 
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); 
 
             base.OnModelCreating(builder);
         }

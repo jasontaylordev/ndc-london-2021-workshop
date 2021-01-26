@@ -3,39 +3,35 @@ using CaWorkshop.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CaWorkshop.Infrastructure.Persistence.Interceptors
 {
-    public class AuditEntitiesSaveChangesInterceptor
-        : SaveChangesInterceptor
+    public class AuditEntitiesSaveChangesInterceptor : SaveChangesInterceptor
     {
         private readonly ICurrentUserService _currentUserService;
 
-        public AuditEntitiesSaveChangesInterceptor(
-            ICurrentUserService currentUserService)
+        public AuditEntitiesSaveChangesInterceptor(ICurrentUserService currentUserService)
         {
             _currentUserService = currentUserService;
         }
 
-        public override int SavedChanges(
-            SaveChangesCompletedEventData eventData,
-            int result)
+        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             AuditEntities(eventData.Context);
 
-            return base.SavedChanges(eventData, result);
+            return base.SavingChanges(eventData, result);
         }
 
-        public override ValueTask<int> SavedChangesAsync(
-            SaveChangesCompletedEventData eventData,
-            int result,
-            CancellationToken cancellationToken = default)
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
         {
             AuditEntities(eventData.Context);
 
-            return base.SavedChangesAsync(eventData, result, cancellationToken);
+            return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
         public void AuditEntities(DbContext context)
