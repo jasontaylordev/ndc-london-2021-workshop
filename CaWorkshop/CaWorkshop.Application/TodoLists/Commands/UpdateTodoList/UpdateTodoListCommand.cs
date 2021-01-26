@@ -15,7 +15,7 @@ namespace CaWorkshop.Application.TodoLists.Commands.UpdateTodoList
     }
 
     public class UpdateTodoListCommandHandler
-        : IRequestHandler<UpdateTodoListCommand>
+        : AsyncRequestHandler<UpdateTodoListCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -24,8 +24,7 @@ namespace CaWorkshop.Application.TodoLists.Commands.UpdateTodoList
             _context = context;
         }
 
-        public async Task<Unit> Handle(UpdateTodoListCommand request,
-            CancellationToken cancellationToken)
+        protected override async Task Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.TodoLists.FindAsync(new object[] { request.Id }, cancellationToken);
 
@@ -34,8 +33,6 @@ namespace CaWorkshop.Application.TodoLists.Commands.UpdateTodoList
             entity.Title = request.Title;
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

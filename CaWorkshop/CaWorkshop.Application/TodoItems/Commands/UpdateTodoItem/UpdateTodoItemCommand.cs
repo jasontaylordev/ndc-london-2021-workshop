@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using CaWorkshop.Application.Common.Exceptions;
 using CaWorkshop.Application.Common.Extensions;
 using CaWorkshop.Application.Common.Interfaces;
 using CaWorkshop.Domain.Entities;
@@ -25,7 +24,7 @@ namespace CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem
     }
 
     public class UpdateTodoItemCommandHandler
-            : IRequestHandler<UpdateTodoItemCommand>
+            : AsyncRequestHandler<UpdateTodoItemCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -34,7 +33,7 @@ namespace CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem
             _context = context;
         }
 
-        public async Task<Unit> Handle(UpdateTodoItemCommand request,
+        protected override async Task Handle(UpdateTodoItemCommand request,
                 CancellationToken cancellationToken)
         {
             var entity = await _context.TodoItems.FindAsync(new object[] { request.Id }, cancellationToken);
@@ -48,8 +47,6 @@ namespace CaWorkshop.Application.TodoItems.Commands.UpdateTodoItem
             entity.Note = request.Note;
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

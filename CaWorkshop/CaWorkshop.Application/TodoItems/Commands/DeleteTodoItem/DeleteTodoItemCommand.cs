@@ -13,7 +13,7 @@ namespace CaWorkshop.Application.TodoItems.Commands.DeleteTodoItem
     }
 
     public class DeleteTodoItemCommandHandler
-        : IRequestHandler<DeleteTodoItemCommand>
+        : AsyncRequestHandler<DeleteTodoItemCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -22,7 +22,7 @@ namespace CaWorkshop.Application.TodoItems.Commands.DeleteTodoItem
             _context = context;
         }
 
-        public async Task<Unit> Handle(DeleteTodoItemCommand request,
+        protected override async Task Handle(DeleteTodoItemCommand request, 
             CancellationToken cancellationToken)
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
@@ -32,8 +32,6 @@ namespace CaWorkshop.Application.TodoItems.Commands.DeleteTodoItem
             _context.TodoItems.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CaWorkshop.Application.TodoLists.Commands.DeleteTodoList
     }
 
     public class DeleteTodoListCommandHandler
-        : IRequestHandler<DeleteTodoListCommand>
+        : AsyncRequestHandler<DeleteTodoListCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -24,8 +24,7 @@ namespace CaWorkshop.Application.TodoLists.Commands.DeleteTodoList
             _context = context;
         }
 
-        public async Task<Unit> Handle(DeleteTodoListCommand request,
-            CancellationToken cancellationToken)
+        protected override async Task Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.TodoLists
                 .Where(l => l.Id == request.Id)
@@ -36,8 +35,6 @@ namespace CaWorkshop.Application.TodoLists.Commands.DeleteTodoList
             _context.TodoLists.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
         }
     }
 }
