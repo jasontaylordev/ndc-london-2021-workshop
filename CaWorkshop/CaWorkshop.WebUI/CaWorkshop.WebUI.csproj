@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.10.1" />
+    <PackageReference Include="Seq.Extensions.Logging" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
